@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+
+<!--
+  Flowplayer JavaScript, website, forums & jQuery Tools by Tero Piirainen
+  Prefer web standards over Flash. Video is the only exception (for now).
+-->
+
+<html lang="en">
+<head>
+
+  <title>jQuery TOOLS - The missing UI library for the Web</title>
+  <meta name="Description" content="A collection of the most important user-interface components for todays websites. This single JavaScript file weighs only 5.8 Kb" />
+  <meta name="Keywords" content="javascript ui library, javascript library, jquery ui library, user interface library, web 2.0 ui library" />
+
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="Distribution" content="Global" />
+  <meta name="Author" content="Tero Piirainen" />
+  <meta name="Robots" content="index,follow" />
+
+  <link rel="shortcut icon" href="http://static.flowplayer.org/tools/img/favicon.ico" type="image/png" />
+  <link rel="stylesheet" type="text/css" href="http://flowplayer.org/css/global-0.52.css?foo" />
+
+  <script src="http://cdn.jquerytools.org/1.2.6/full/jquery.tools.min.js"></script>
+
+  <!-- site specific scripts -->
+
+  <script type="text/javascript" src="js/global-0.54_edited.js"></script>
+  <script type="text/javascript">
+    var account = {admin: false }, v = {
+      ver: "3.2.7",
+      core: "/swf/flowplayer-3.2.7.swf",
+
+      controls: "flowplayer.controls-3.2.5.swf",
+      air:  "flowplayer.controls-air-3.2.5.swf",
+      tube:  "flowplayer.controls-tube-3.2.5.swf",
+
+      content: "flowplayer.content-3.2.0.swf",
+      rtmp: "flowplayer.rtmp-3.2.3.swf",
+      slowmotion: "flowplayer.slowmotion-3.2.1.swf",
+      pseudostreaming: "flowplayer.pseudostreaming-3.2.7.swf"
+    };
+  </script>
+
+  <!--[if lt IE 7]>
+    <style>
+      @import "http://static.flowplayer.org/css/ie6.css?v=0.2";
+    </style>
+  <![endif]-->
+
+  <!--[if lt IE 8]>
+    <style>
+      html { overflow-x:hidden; }
+      #content ol, #content ul  {margin-left: 50px; }
+    </style>
+  <![endif]-->
+
+</head>
+<body id="tools_download_index" class="firefox tools">
+
+  <div id="global">
+    <div class="wrap">
+      <ul>
+        <li><a id="global_fp" href="http://flowplayer.org/index.html">Flowplayer</a></li>
+        <li><a class="active" id="global_jt" href="http://flowplayer.org/tools/index.html">jQuery Tools</a></li>
+      </ul>
+      <ul id="acc" class="acc">
+        <li><a href="#">Log In</a></li>
+        <li><a href="#">Sign Up</a></li>
+      </ul>
+      <form id="gsearch" action="http://flowplayer.org/tools/search.html">
+        <input type="text" name="q" value="" />
+        <button type="submit">Search</button>
+      </form>
+    </div>
+  </div>
+
+  <div>
+
+    <div id="loginscroll">
+
+      <div>
+
+        <!-- login -->
+        <form id="login" name="login" class="account">
+
+          <p>
+            <input type="text" name="login" value="username or email" /><br />
+          </p>
+
+          <p>
+            <input type="text" name="password" value="password" />
+          </p>
+
+          <label>
+            <input type="checkbox" name="remember" value="true" id="remember" />
+            Stay signed in
+          </label>
+
+          <p>
+            <button type="submit">Login</button>
+          </p>
+
+          <p>
+            <a id="anext" href="#">Forgot your password?</a>
+          </p>
+
+        </form>
+
+        <!-- forgot password -->
+        <form id="forgot" name="forgot" class="account">
+
+          <p>
+            <input type="text" name="login" value="your email" /><br />
+          </p>
+
+          <p>
+            <button type="submit">Request password</button>
+          </p>
+
+          <p>
+            <a id="aprev" href="#">&laquo; Back to login</a>
+          </p>
+
+        </form>
+
+      </div>
+
+    </div>
+
+    </div>
+
+    <!-- signup -->
+    <form id="signup" class="account">
+
+      <p>
+        <input type="text" name="email" value="email" /><br />
+      </p>
+
+      <p>
+        You will recieve your password to this address. Address is not made public.
+      </p>
+
+      <p>
+        <input type="text" name="username" value="username" />
+      </p>
+
+      <p>
+        Your preferred username that is used when logging in.
+      </p>
+
+      <p>
+        <button type="submit">Sign Up</button>
+      </p>
+
+    </form>
+
+  <div id="wrap">
+
+      <div class="globalnav" id="nav2">
+
+          <a id="jqt1" href="http://flowplayer.org/tools/index.html">Home</a>
+          <a id="jqt2" href="http://flowplayer.org/tools/download/index.html">Download</a>
+          <a id="jqt3" href="http://flowplayer.org/tools/demos/index.html">Demos</a>
+          <a id="jqt4" href="http://flowplayer.org/tools/documentation/index.html">Documentation</a>
+          <a id="jqt5" href="http://flowplayer.org/tools/forum/">Forums</a>
+
+      </div>
+
+    <div id="content">
+
+<link rel="stylesheet" type="text/css" href="http://flowplayer.org/tools/css/tooltip-generic.css"/>
+<link rel="stylesheet" type="text/css" href="http://flowplayer.org/tools/download/download.css"/>
+
+<script>
+$(function() {
+
+  // global navi
+  $("#jqt2").addClass("active");
+
+  var els = $(".listing :checkbox, .listing :radio").attr("checked", false);
+
+  // tooltips
+  $(".listing img").tooltip({ position: 'right top', offset: [60, 10], delay: 50 });
+
+  var INFO;
+  $.ajax({
+    url: 'http://builder.jquerytools.org/info',
+    dataType: 'jsonp',
+    success: function (info) {
+      INFO = info;
+      $('input[name="build"]').change();
+    }
+  });
+
+  // returns a string representing the size in kb
+  var bytes_to_kb = function (bytes) {
+    return (Math.round(bytes / 102.4) / 10) + ' Kb';
+  };
+
+  // checkbox change
+  els.change(function() {
+
+    // count size
+    var size = 0,
+       count = 0,
+       tools = "";
+
+
+    var version_info;
+    $('input[name="build"]').each(function () {
+      var tr = $(this).parents('tr');
+      if (this.checked) {
+        tr.addClass('selected');
+        if (INFO) {
+          version_info = INFO[this.value];
+        }
+      }
+      else {
+        tr.removeClass('selected');
+      }
+    });
+
+    if (version_info) {
+      $('#jquery_version').text(version_info.jquery.version);
+      $('#jquery_size').text(bytes_to_kb(version_info.jquery.size));
+      $('.listing :checkbox').each(function () {
+        if (this.name !== 'include_jquery') {
+          var size = version_info.sizes[decodeURIComponent(this.name)];
+          var el = $('.size', $(this).parent().parent().parent());
+          el.text(size ? bytes_to_kb(size): '');
+          this.value = size;
+        }
+      });
+    }
+
+    els.filter(":checked").each(function() {
+      if (this.name === 'include_jquery') {
+        tools += "&include_jquery=true";
+        if (version_info) {
+          size += version_info.jquery.size;
+        }
+      }
+      else if (this.name !== 'build') {
+        // 170 bytes for stripping down comment size
+        size += parseFloat($(this).val()) - 170;
+        count++;
+        tools += "&t=" + this.name;
+      }
+    });
+
+    // user information
+    $("#selected").html('(' +count+ ' of ' + els.size() + ' selected)');
+    $("#minified").html(bytes_to_kb(size));
+    $("#gzipped") .html(bytes_to_kb(size * 0.322) + ' <em>gzipped</em>');
+
+    // build choice
+    var build = $('input[name="build"]').filter(':checked').val() || 'v1.2.6';
+
+    // download link
+    $("#downloadLink").attr(
+      "href",
+      "http://builder.jquerytools.org/" + build + "/jquery.tools.min.js?" + tools
+    );
+    $("#tokens").html(tools);
+
+
+    // highlight row
+    var tr = $(this).parents("tr"), checked = this.checked;
+
+    if (checked) {
+      tr.addClass("selected");
+    } else {
+      tr.removeClass("selected");
+    }
+
+    // show/hide plugins
+    if (!tr.is(".plugin")) {
+      tr.nextAll().each(function()  {
+        if ($(this).is(".plugin"))  {
+          if (checked) {
+            $(this).fadeIn();
+          } else {
+            $(this).hide().removeClass("selected").find(":checkbox").attr("checked", false);
+          }
+
+        } else  {
+          return false;
+        }
+      });
+    }
+
+  });
+
+  // default selection
+  $("#t_tabs, #t_tooltip, #t_scrollable, #t_overlay").each(function() {
+    $(this).find(":checkbox").click().triggerHandler("change");
+  });
+  $("#build_stable").click().triggerHandler("change");
+});
+</script>
+
+
+
+<h1 id="hero">
+  <span></span>
+  Download
+  <em>Version <strong>1.2.6</strong></em>
+</h1>
+
+<h2 class="first">Quick start</h2>
+
+<p>
+   Insert the following line on your HTML page and you are done!
+</p>
+
+<div class="box code">
+<pre><code class="html">&lt;script src="http://cdn.jquerytools.org/1.2.6/jquery.tools.min.js"&gt;&lt;/script&gt;</code></pre>
+</div>
+
+
+<p>
+   This is the official <strong>jQuery Tools UI library</strong> and after the inclusion you will have the following tools available:
+</p>
+
+<ol>
+  <li><a href="http://jquery.com" class="external">jQuery 1.6.4</a></li>
+
+
+
+
+      <li><a href="http://flowplayer.org/tools/tabs/index.html">Tabs</a></li>
+
+
+
+
+
+      <li><a href="http://flowplayer.org/tools/tooltip/index.html">Tooltip</a></li>
+
+
+
+
+
+
+
+      <li><a href="http://flowplayer.org/tools/scrollable/index.html">Scrollable</a></li>
+
+
+
+
+
+
+
+      <li><a href="http://flowplayer.org/tools/overlay/index.html">Overlay</a></li>
+
+
+
+
+
+
+</ol>
+
+<p>
+  The tools will be loaded with <a href="../documentation/performance.html">maximum performance</a> no matter where your user is located on the globe. Without the jQuery library, the file size is only <strong>4.45 Kb</strong> when gzipping is enabled on the server-side. If you already have jQuery included on your page, you can simply remove it and use only the above <samp>script src</samp> statement.
+</p>
+
+<p style="margin-bottom:40px">
+  Please note that this global content delivery network is <strong>completely free</strong>. You can use it freely in any website including production environments. This network has been kindly offered for all jQuery Tools users by <a href="http://www.maxcdn.com/" class="external">Max CDN</a>. Respect to them!
+</p>
+
+
+<a name="combine"></a>
+<h2 class="first">Build a custom set of Tools. <em id="selected"></em></h2>
+<h3 style="color:#7788FF;margin:5px 0 15px 0;">Or download the source code</h3>
+
+<p>
+  Here you can download individual tools or create a custom combination of tools by selecting only those you want. Both the <strong>source code</strong> and the <strong>minified versions</strong> are available.
+</p>
+
+    <h3>Version</h3>
+    <table class="listing">
+    <tr>
+      <td>
+        <label>
+          <input type="radio" checked="checked" value="v1.2.6" name="build" id="build_stable" />
+          1.2.6 stable
+        </label>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <label>
+          <input type="radio" value="dev" name="build" id="build_dev" />
+          1.2.7-dev
+        </label>
+      </td>
+    </tr>
+    </table>
+
+
+
+    <h3>Include jQuery</h3>
+<table class="listing">
+
+
+
+
+
+
+
+
+
+
+
+    <tr id="t_jquery" >
+      <td>
+
+          <label>
+            <input type="checkbox" name="include_jquery" value="72174" /> jQuery <span id="jquery_version"></span>
+          </label>
+
+
+
+      </td>
+      <td><small></small></td>
+
+
+
+        <td class="size" id="jquery_size"></td>
+
+
+      <td style="text-align:right;padding-right:5px">
+        <img src="http://flowplayer.org/img/global/info_small.png" />
+        <div class="tooltip">
+          <h3>jQuery 1.6.4</h3>
+          <p>All tools depend on this library (except flashembed). Can alternatively be included from googleapis (see below)</p>
+
+        </div>
+      </td>
+    </tr>
+
+
+
+
+
+
+    </table>
+    <h3>UI tools</h3>
+    <table class="listing">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <tr id="t_tabs" >
+      <td>
+
+          <label>
+            <input type="checkbox" name="tabs%2Ftabs.js" value="2968" /> Tabs
+          </label>
+
+
+
+      </td>
+      <td><small></small></td>
+
+
+
+        <td class="size"></td>
+
+
+      <td style="text-align:right;padding-right:5px">
+        <img src="http://flowplayer.org/img/global/info_small.png" />
+        <div class="tooltip">
+          <h3>Tabs</h3>
+          <p>The most important UI tool</p>
+
+            <p> <a href="http://flowplayer.org/tools/tabs/index.html">documentation</a> </p>
+
+        </div>
+      </td>
+    </tr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <tr id="t_tabs.slideshow" class="plugin">
+      <td>
+
+          <label>
+            <input type="checkbox" name="tabs%2Ftabs.slideshow.js" value="1743" /> Slideshow plugin
+          </label>
+
+
+
+      </td>
+      <td><small></small></td>
+
+
+
+        <td class="size"></td>
+
+
+      <td style="text-align:right;padding-right:5px">
+        <img src="http://flowplayer.org/img/global/info_small.png" />
+        <div class="tooltip">
+          <h3>Slideshow plugin</h3>
+          <p>Transforms tabs into a working slideshow</p>
+
+            <p> <a href="http://flowplayer.org/tools/tabs/slideshow.html">documentation</a> </p>
+
+        </div>
+      </td>
+    </tr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <tr id="t_tooltip" >
+      <td>
+
+          <label>
+            <input type="checkbox" name="tooltip%2Ftooltip.js" value="3681" /> Tooltip
+          </label>
+
+
+
+      </td>
+      <td><small></small></td>
+
+
+
+        <td class="size"></td>
+
+
+      <td style="text-align:right;padding-right:5px">
+        <img src="http://flowplayer.org/img/global/info_small.png" />
+        <div class="tooltip">
+          <h3>Tooltip</h3>
+          <p>The basics of UI design</p>
+
+            <p> <a href="http://flowplayer.org/tools/tooltip/index.html">documentation</a> </p>
+
+        </div>
+      </td>
+    </tr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <tr id="t_tooltip.slide" class="plugin">
+      <td>
+
+          <label>
+            <input type="checkbox" name="tooltip%2Ftooltip.slide.js" value="925" /> Slide effect
+          </label>
+
+
+
+      </td>
+      <td><small></small></td>
+
+
+
+        <td class="size"></td>
+
+
+      <td style="text-align:right;padding-right:5px">
+        <img src="http://flowplayer.org/img/global/info_small.png" />
+        <div class="tooltip">
+          <h3>Slide effect</h3>
+          <p>A sliding tooltip effect with customized sliding directions, dimensions and speeds</p>
+
+            <p> <a href="http://flowplayer.org/tools/tooltip/slide.html">documentation</a> </p>
+
+        </div>
+      </td>
+    </tr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <tr id="t_tooltip.dynamic" class="plugin">
+      <td>
+
+          <label>
+            <input type="checkbox" name="tooltip%2Ftooltip.dynamic.js" value="1668" /> Dynamic plugin
+          </label>
+
+
+
+      </td>
+      <td><small></small></td>
+
+
+
+        <td class="size"></td>
+
+
+      <td style="text-align:right;padding-right:5px">
+        <img src="http://flowplayer.org/img/global/info_small.png" />
+        <div class="tooltip">
+          <h3>Dynamic plugin</h3>
+          <p>Dynamic positioning of the tooltip so that it always stays in the viewport</p>
+
+            <p> <a href="http://flowplayer.org/tools/tooltip/dynamic.html">documentation</a> </p>
+
+        </div>
+      </td>
+    </tr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <tr id="t_scrollable" >
+      <td>
+
+          <label>
+            <input type="checkbox" name="scrollable%2Fscrollable.js" value="3770" /> Scrollable
+          </label>
+
+
+
+      </td>
+      <td><small></small></td>
+
+
+
+        <td class="size"></td>
+
+
+      <td style="text-align:right;padding-right:5px">
+        <img src="http://flowplayer.org/img/global/info_small.png" />
+        <div class="tooltip">
+          <h3>Scrollable</h3>
+          <p>A generic HTML scrolling widget</p>
+
+            <p> <a href="http://flowplayer.org/tools/scrollable/index.html">documentation</a> </p>
+
+        </div>
+      </td>
+    </tr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <tr id="t_scrollable.autoscroll" class="plugin">
+      <td>
+
+          <label>
+            <input type="checkbox" name="scrollable%2Fscrollable.autoscroll.js" value="790" /> Autoscroll plugin
+          </label>
+
+
+
+      </td>
+      <td><small></small></td>
+
+
+
+        <td class="size"></td>
+
+
+      <td style="text-align:right;padding-right:5px">
+        <img src="http://flowplayer.org/img/global/info_small.png" />
+        <div class="tooltip">
+          <h3>Autoscroll plugin</h3>
+          <p>Makes the scrolling behaviour automatic. highly configurable</p>
+
+            <p> <a href="http://flowplayer.org/tools/scrollable/autoscroll.html">documentation</a> </p>
+
+        </div>
+      </td>
+    </tr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <tr id="t_scrollable.navigator" class="plugin">
+      <td>
+
+          <label>
+            <input type="checkbox" name="scrollable%2Fscrollable.navigator.js" value="1643" /> Navigator plugin
+          </label>
+
+
+
+      </td>
+      <td><small></small></td>
+
+
+
+        <td class="size"></td>
+
+
+      <td style="text-align:right;padding-right:5px">
+        <img src="http://flowplayer.org/img/global/info_small.png" />
+        <div class="tooltip">
+          <h3>Navigator plugin</h3>
+          <p>Provides navigation buttons for switching between pages in scrollable</p>
+
+            <p> <a href="http://flowplayer.org/tools/scrollable/navigator.html">documentation</a> </p>
+
+        </div>
+      </td>
+    </tr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <tr id="t_overlay" >
+      <td>
+
+          <label>
+            <input type="checkbox" name="overlay%2Foverlay.js" value="3057" /> Overlay
+          </label>
+
+
+
+      </td>
+      <td><small></small></td>
+
+
+
+        <td class="size"></td>
+
+
+      <td style="text-align:right;padding-right:5px">
+        <img src="http://flowplayer.org/img/global/info_small.png" />
+        <div class="tooltip">
+          <h3>Overlay</h3>
+          <p>A generic HTML overlaying widget</p>
+
+            <p> <a href="http://flowplayer.org/tools/overlay/index.html">documentation</a> </p>
+
+        </div>
+      </td>
+    </tr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <tr id="t_overlay.apple" class="plugin">
+      <td>
+
+          <label>
+            <input type="checkbox" name="overlay%2Foverlay.apple.js" value="1717" /> Apple effect
+          </label>
+
+
+
+      </td>
+      <td><small></small></td>
+
+
+
+        <td class="size"></td>
+
+
+      <td style="text-align:right;padding-right:5px">
+        <img src="http://flowplayer.org/img/global/info_small.png" />
+        <div class="tooltip">
+          <h3>Apple effect</h3>
+          <p>An overlay effect that you have seen on apple.com</p>
+
+            <p> <a href="http://flowplayer.org/tools/overlay/apple.html">documentation</a> </p>
+
+        </div>
+      </td>
+    </tr>
+
+
+
+
+
+
+    </table>
+    <h3>Form tools</h3>
+    <table class="listing">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <tr id="t_dateinput" >
+      <td>
+
+          <label>
+            <input type="checkbox" name="dateinput%2Fdateinput.js" value="8199" /> Dateinput
+          </label>
+
+
+
+      </td>
+      <td><small></small></td>
+
+
+
+        <td class="size"></td>
+
+
+      <td style="text-align:right;padding-right:5px">
+        <img src="http://flowplayer.org/img/global/info_small.png" />
+        <div class="tooltip">
+          <h3>Dateinput</h3>
+          <p>HTML5 date input for humans</p>
+
+            <p> <a href="http://flowplayer.org/tools/dateinput/index.html">documentation</a> </p>
+
+        </div>
+      </td>
+    </tr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <tr id="t_rangeinput" >
+      <td>
+
+          <label>
+            <input type="checkbox" name="rangeinput%2Frangeinput.js" value="4621" /> Rangeinput
+          </label>
+
+
+
+      </td>
+      <td><small></small></td>
+
+
+
+        <td class="size"></td>
+
+
+      <td style="text-align:right;padding-right:5px">
+        <img src="http://flowplayer.org/img/global/info_small.png" />
+        <div class="tooltip">
+          <h3>Rangeinput</h3>
+          <p>HTML5 range input for humans</p>
+
+            <p> <a href="http://flowplayer.org/tools/rangeinput/index.html">documentation</a> </p>
+
+        </div>
+      </td>
+    </tr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <tr id="t_validator" >
+      <td>
+
+          <label>
+            <input type="checkbox" name="validator%2Fvalidator.js" value="6594" /> Validator
+          </label>
+
+
+
+      </td>
+      <td><small></small></td>
+
+
+
+        <td class="size"></td>
+
+
+      <td style="text-align:right;padding-right:5px">
+        <img src="http://flowplayer.org/img/global/info_small.png" />
+        <div class="tooltip">
+          <h3>Validator</h3>
+          <p>HTML5 input validation for humans</p>
+
+            <p> <a href="http://flowplayer.org/tools/validator/index.html">documentation</a> </p>
+
+        </div>
+      </td>
+    </tr>
+
+
+
+
+
+
+    </table>
+    <h3>Toolbox</h3>
+    <table class="listing">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <tr id="t_toolbox.flashembed" >
+      <td>
+
+          <label>
+            <input type="checkbox" name="toolbox%2Ftoolbox.flashembed.js" value="3861" /> Flashembed
+          </label>
+
+
+
+      </td>
+      <td><small></small></td>
+
+
+
+        <td class="size"></td>
+
+
+      <td style="text-align:right;padding-right:5px">
+        <img src="http://flowplayer.org/img/global/info_small.png" />
+        <div class="tooltip">
+          <h3>Flashembed</h3>
+          <p>The future of Flash embedding. Works as a standalone tool and jQuery is not required.</p>
+
+            <p> <a href="http://flowplayer.org/tools/toolbox/flashembed.html">documentation</a> </p>
+
+        </div>
+      </td>
+    </tr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <tr id="t_toolbox.history" >
+      <td>
+
+          <label>
+            <input type="checkbox" name="toolbox%2Ftoolbox.history.js" value="1191" /> History
+          </label>
+
+
+
+      </td>
+      <td><small></small></td>
+
+
+
+        <td class="size"></td>
+
+
+      <td style="text-align:right;padding-right:5px">
+        <img src="http://flowplayer.org/img/global/info_small.png" />
+        <div class="tooltip">
+          <h3>History</h3>
+          <p>Back button for AJAX apps</p>
+
+            <p> <a href="http://flowplayer.org/tools/toolbox/history.html">documentation</a> </p>
+
+        </div>
+      </td>
+    </tr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <tr id="t_toolbox.expose" >
+      <td>
+
+          <label>
+            <input type="checkbox" name="toolbox%2Ftoolbox.expose.js" value="2271" /> Expose
+          </label>
+
+
+
+      </td>
+      <td><small></small></td>
+
+
+
+        <td class="size"></td>
+
+
+      <td style="text-align:right;padding-right:5px">
+        <img src="http://flowplayer.org/img/global/info_small.png" />
+        <div class="tooltip">
+          <h3>Expose</h3>
+          <p>Makes your HTML stand out from its surroundings</p>
+
+            <p> <a href="http://flowplayer.org/tools/toolbox/expose.html">documentation</a> </p>
+
+        </div>
+      </td>
+    </tr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <tr id="t_toolbox.mousewheel" >
+      <td>
+
+          <label>
+            <input type="checkbox" name="toolbox%2Ftoolbox.mousewheel.js" value="925" /> Mousewheel
+          </label>
+
+
+
+      </td>
+      <td><small></small></td>
+
+
+
+        <td class="size"></td>
+
+
+      <td style="text-align:right;padding-right:5px">
+        <img src="http://flowplayer.org/img/global/info_small.png" />
+        <div class="tooltip">
+          <h3>Mousewheel</h3>
+          <p>A generic mousewheel support for jQuery</p>
+
+            <p> <a href="http://flowplayer.org/tools/toolbox/mousewheel.html">documentation</a> </p>
+
+        </div>
+      </td>
+    </tr>
+
+
+
+
+</table>
+
+
+<a href="#" id="downloadLink">
+  <img src="http://flowplayer.org/img/commerce/download.png" alt="Download jQuery Tools" />
+</a>
+
+<h3 style="margin:10px 0 20px 0">
+  <em>Size</em>: <span id="minified"></span> / <span id="gzipped"></span>
+</h3>
+
+
+<a name="cdn"></a>
+<h2>jQuery Tools from CDN</h2>
+
+<p>
+  Here is a list of all available jQuery Tools combinations from a <strong>free</strong> Content Delivery Network.
+</p>
+
+<div class="box code">
+<pre><code class="html">&lt;!-- UI Tools: Tabs, Tooltip, Scrollable and Overlay (4.45 Kb) --&gt;
+&lt;script src="http://cdn.jquerytools.org/1.2.6/tiny/jquery.tools.min.js"&gt;&lt;/script&gt;
+
+&lt;!-- Form tools: Dateinput, Rangeinput and Validator. No jQuery library. (5.98 Kb) --&gt;
+&lt;script src="http://cdn.jquerytools.org/1.2.6/form/jquery.tools.min.js"&gt;&lt;/script&gt;
+
+&lt;!-- ALL jQuery Tools. No jQuery library --&gt;
+&lt;script src="http://cdn.jquerytools.org/1.2.6/all/jquery.tools.min.js"&gt;&lt;/script&gt;
+
+&lt;!-- jQuery Library + UI Tools --&gt;
+&lt;script src="http://cdn.jquerytools.org/1.2.6/jquery.tools.min.js"&gt;&lt;/script&gt;
+
+&lt;!-- jQuery Library + ALL jQuery Tools --&gt;
+&lt;script src="http://cdn.jquerytools.org/1.2.6/full/jquery.tools.min.js"&gt;&lt;/script&gt;</code></pre>
+</div>
+
+
+<p>
+  If you prefer to load the jQuery library separately the recommended practice is to load jQuery from Google's CDN service. Make sure the jQuery library is always loaded <em>before</em> the jQuery Tools library.
+</p>
+
+<div class="box code">
+<pre><code class="html">&lt;script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"&gt;&lt;/script&gt;</code></pre>
+</div>
+
+    </div>
+
+    <div id="right">
+
+  <img style="margin-left:16px" src="http://flowplayer.org/tools/img/github-logo.png" alt="" />
+  <img style="margin-left:10px" src="http://flowplayer.org/tools/img/github.png" alt="" />
+
+  <p>
+    There are two jQuery Tools repositories on Github:
+  </p>
+
+  <p>
+    <a href="http://github.com/jquerytools/jquerytools" class="external">jQuery Tools library</a>
+    <a href="http://github.com/jquerytools/www" class="external">jQuery Tools website</a>
+  </p>
+
+  <p>
+    If you want to contribute please email your thougths from Github and send the contributions trough <a href="http://github.com/jquerytools/jquerytools/forkqueue" class="external">fork queue</a>.
+  </p>
+
+<script>
+$("#right a[href=/tools/download/index.html]").addClass("active");
+</script>
+
+<p style="text-align:center;margin:30px 40px 30px 0">
+  <a style="font-size:10px;color:#666"
+    href="https://github.com/jquerytools/jquerytools/issues">report a bug &raquo;</a>
+</p>
+
+<a href="http://flowplayer.org/tools/release-notes/index.html">
+  <img src="http://static.flowplayer.org/tools/img/1.2/banner-small.jpg"
+    style="margin-left:10px"
+    alt="Introducing jQuery Tools 1.2" /></a>
+
+<p style="margin:15px 0 0 22px">
+  <a style="font-size:11px;color:#333"
+    href="https://github.com/jquerytools/jquerytools/blob/master/CHANGELOG.md">What's new in v1.2.6 &raquo;</a>
+</p>
+
+    </div>
+
+    <div class="clear"></div>
+
+      <div id="bull">&bull;</div>
+
+      <div id="footer">
+
+        <h2>jQuery Tools Twitter feed</h2>
+
+        <div id="twitter">
+          <div id="tweets"></div>
+
+          <a id="follow" href="http://twitter.com/jquerytools" title="Follow jQuery Tools on Twitter">
+            jQuery Tools Twitter feed</a>
+        </div>
+
+        <br clear="all" />
+
+        <div id="footerlinks">
+          <a href="https://github.com/jquerytools/jquerytools">github repository</a>
+          <a href="https://github.com/jquerytools/jquerytools/issues">report a bug</a>
+          <a href="http://flowplayer.org/tools-1.1/index.html">version 1.1</a>
+          <a href="http://cloudpanic.com">my blog: <strong>cloudpanic.com</strong></a>
+        </div>
+
+      </div>
+
+  </div>
+
+    <script type="text/javascript">
+      var _tracker = _gat._getTracker("UA-5877901-1");
+      _tracker._trackPageview();
+    </script>
+
+</body>
+</html>
