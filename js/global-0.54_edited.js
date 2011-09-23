@@ -1787,7 +1787,7 @@ $f.addPlugin("controls", function(wrap, options) {
         }
 
         function getEl(clip) {
-            return (manual) ? els.filter("[href=" + clip.originalUrl + "]") : els.eq(clip.index);
+            return (manual) ? els.filter("[href='" + clip.originalUrl + "']") : els.eq(clip.index);
         }
 
         function getEls() {
