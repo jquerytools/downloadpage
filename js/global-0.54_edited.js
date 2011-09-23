@@ -2840,9 +2840,9 @@ $(function() {
     if (f == '/index.html' || f == '/') f = "";
 
     if (isTools) {
-        $("#nav2 a").filter("[href=" + location.pathname + "]").addClass("active");
+        $("#nav2 a").filter("[href='" + location.pathname + "']").addClass("active");
     } else {
-        $("#nav1 a").filter("[href=" + f + "http://flowplayer.org/index.html]").addClass("active");
+        $("#nav1 a").filter("[href='" + f + "http://flowplayer.org/index.html']").addClass("active");
     }
 
 
@@ -2853,7 +2853,7 @@ $(function() {
         page = page.substring(0, page.indexOf("#"));
     }
 
-    el = $("#right ul a[href=" +page+ "]");
+    el = $("#right ul a[href='" +page+ "']");
     if (!el.length && (f == 'documentation' || f == 'account')) el = $("#right ul a:first");
 
     el.addClass("selected").click(function(e) {
